@@ -220,6 +220,35 @@ export default function TaskCard({ task, isGrouped = false }) {
   )
 }
 
+// ─── Simple inline markdown renderer (bold + line breaks only) ───────────────
+function renderMarkdown(text, isStreaming) {
+  // Split on double newlines for paragraphs, single newlines preserved
+  const lines = text.split('\n')
+  return lines.map((line, li) => {
+    // Parse **bold** within each line
+    const parts = []
+    const re = /\*\*(.+?)\*\*/g
+    let last = 0, m
+    while ((m = re.exec(line)) !== null) {
+      if (m.index > last) parts.push(line.slice(last, m.index))
+      parts.push(<strong key={m.index} className="font-semibold text-slate-200">{m[1]}</strong>)
+      last = m.index + m[0].length
+    }
+    if (last < line.length) parts.push(line.slice(last))
+    // Append blinking cursor on the very last line if streaming
+    const isLastLine = li === lines.length - 1
+    return (
+      <span key={li}>
+        {parts.length > 0 ? parts : ' '}
+        {isLastLine && isStreaming && (
+          <span className="inline-block w-0.5 h-3 bg-slate-400 ml-0.5 animate-blink align-middle" />
+        )}
+        {li < lines.length - 1 && <br />}
+      </span>
+    )
+  })
+}
+
 // ─── Output block ─────────────────────────────────────────────────────────────
 function OutputBlock({ content, isFinal, isStreaming }) {
   if (!content) return null
@@ -237,12 +266,8 @@ function OutputBlock({ content, isFinal, isStreaming }) {
           <span className="text-[10px] text-blue-400 uppercase tracking-wider font-medium">Streaming</span>
         </div>
       )}
-      <p className="whitespace-pre-wrap break-words">
-        {content}
-        {/* Blinking cursor while streaming */}
-        {isStreaming && (
-          <span className="inline-block w-0.5 h-3 bg-slate-400 ml-0.5 animate-blink align-middle" />
-        )}
+      <p className="break-words">
+        {renderMarkdown(content, isStreaming)}
       </p>
     </div>
   )

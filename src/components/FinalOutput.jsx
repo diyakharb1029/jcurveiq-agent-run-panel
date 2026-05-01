@@ -1,3 +1,25 @@
+// ─── Simple inline markdown renderer (bold + line breaks) ────────────────────
+function renderMarkdown(text) {
+  const lines = text.split('\n')
+  return lines.map((line, li) => {
+    const parts = []
+    const re = /\*\*(.+?)\*\*/g
+    let last = 0, m
+    while ((m = re.exec(line)) !== null) {
+      if (m.index > last) parts.push(line.slice(last, m.index))
+      parts.push(<strong key={m.index} className="font-semibold text-slate-100">{m[1]}</strong>)
+      last = m.index + m[0].length
+    }
+    if (last < line.length) parts.push(line.slice(last))
+    return (
+      <span key={li}>
+        {parts.length > 0 ? parts : ' '}
+        {li < lines.length - 1 && <br />}
+      </span>
+    )
+  })
+}
+
 export default function FinalOutput({ output, durationMs, taskCount }) {
   if (!output) return null
 
@@ -25,8 +47,8 @@ export default function FinalOutput({ output, durationMs, taskCount }) {
 
       {/* Summary */}
       <div className="px-5 py-4">
-        <p className="text-slate-200 text-sm leading-relaxed whitespace-pre-wrap">
-          {summary}
+        <p className="text-slate-200 text-sm leading-relaxed">
+          {renderMarkdown(summary)}
         </p>
       </div>
 
