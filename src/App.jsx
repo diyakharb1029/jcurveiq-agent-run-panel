@@ -28,7 +28,7 @@ export default function App() {
       {/* Top bar */}
       <header className="border-b border-slate-800 px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-6 h-6 bg-indigo-500 rounded flex items-center justify-center text-xs font-bold text-white">J</div>
+          <img src="/logo.png" alt="JcurveIQ" className="w-7 h-7 rounded" />
           <span className="text-sm font-semibold text-slate-200 tracking-wide">JcurveIQ</span>
           <span className="text-slate-600 text-xs">/ Agent Run Panel</span>
         </div>
