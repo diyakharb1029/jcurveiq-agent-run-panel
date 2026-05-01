@@ -89,4 +89,4 @@ See [`DECISIONS.md`](./DECISIONS.md) for the full reasoning behind each of the f
 
 ## AI assistance disclosure
 
-This project was built with the assistance of an AI coding tool (Claude). The product decisions, component architecture, state machine design, fixture data, and documentation were authored and reviewed by me — the AI was used as a force multiplier for implementation speed, per the role description.
+I used GitHub Copilot for boilerplate autocompletion during development. All architectural decisions, component design, state machine logic, fixture authoring, and written documentation are my own work.
