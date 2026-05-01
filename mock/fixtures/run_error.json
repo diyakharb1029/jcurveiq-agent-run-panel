@@ -1,0 +1,96 @@
+[
+  {
+    "type": "run_started",
+    "run_id": "r_002",
+    "query": "Summarise Tesla free cash flow and capex trends (2020–2024)",
+    "timestamp": 0
+  },
+  {
+    "type": "agent_thought",
+    "task_id": "coordinator",
+    "thought": "Breaking into: (1) Tesla 10-K filing fetch, (2) FCF + capex extraction, (3) peer comparison with legacy OEMs. Will fetch in sequence due to EDGAR rate limits observed on prior runs.",
+    "timestamp": 1100
+  },
+  {
+    "type": "task_spawned",
+    "task_id": "t_101",
+    "label": "Fetch Tesla 10-K filings (2020–2024)",
+    "agent": "filing_fetcher",
+    "spawned_by": "coordinator",
+    "parallel_group": null,
+    "depends_on": [],
+    "timestamp": 1800
+  },
+  {
+    "type": "tool_call",
+    "task_id": "t_101",
+    "tool": "sec_edgar_search",
+    "input_summary": "ticker=TSLA, form=10-K, years=2020–2024",
+    "timestamp": 2500
+  },
+  {
+    "type": "tool_result",
+    "task_id": "t_101",
+    "tool": "sec_edgar_search",
+    "output_summary": "5 filings found. Extracting FCF and capex line items...",
+    "timestamp": 4200
+  },
+  {
+    "type": "partial_output",
+    "task_id": "t_101",
+    "content": "Tesla FCF: 2020 $2.8B → 2021 $5.0B → 2022 $7.6B → 2023 $4.4B → 2024 $3.6B. FCF margin peaked in 2022, declining since on rising capex for Gigafactory expansion.",
+    "is_final": false,
+    "quality_score": null,
+    "timestamp": 6000
+  },
+  {
+    "type": "partial_output",
+    "task_id": "t_101",
+    "content": "Tesla FCF: 2020 $2.8B → 2023 $4.4B. Capex: 2020 $1.5B → 2023 $8.9B. FCF margin compressed from 11.2% to 5.8% as the company funded Gigafactory Berlin, Texas, and Mexico.",
+    "is_final": true,
+    "quality_score": 0.88,
+    "timestamp": 7500
+  },
+  {
+    "type": "task_update",
+    "task_id": "t_101",
+    "status": "complete",
+    "error": null,
+    "reason": null,
+    "message": null,
+    "timestamp": 7700
+  },
+  {
+    "type": "task_spawned",
+    "task_id": "t_102",
+    "label": "Fetch peer OEM capex benchmarks (GM, Ford, Toyota)",
+    "agent": "filing_fetcher",
+    "spawned_by": "coordinator",
+    "parallel_group": null,
+    "depends_on": ["t_101"],
+    "timestamp": 8200
+  },
+  {
+    "type": "tool_call",
+    "task_id": "t_102",
+    "tool": "sec_edgar_search",
+    "input_summary": "tickers=[GM, F, TM], form=20-F/10-K, years=2020–2023",
+    "timestamp": 8900
+  },
+  {
+    "type": "task_spawned",
+    "task_id": "t_103",
+    "label": "Draft FCF trend analysis memo",
+    "agent": "synthesis_agent",
+    "spawned_by": "coordinator",
+    "parallel_group": null,
+    "depends_on": ["t_101", "t_102"],
+    "timestamp": 9100
+  },
+  {
+    "type": "run_error",
+    "run_id": "r_002",
+    "message": "Coordinator encountered an unrecoverable error: vector store connection lost during embedding step. The pipeline cannot resume. Partial results from completed tasks may be reviewed below.",
+    "timestamp": 11200
+  }
+]

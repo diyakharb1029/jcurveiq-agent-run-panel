@@ -1,0 +1,290 @@
+[
+  {
+    "type": "run_started",
+    "run_id": "r_001",
+    "query": "Analyse Apple R&D intensity vs large-cap peers (2019–2023)",
+    "timestamp": 0
+  },
+  {
+    "type": "agent_thought",
+    "task_id": "coordinator",
+    "thought": "Breaking into: (1) Apple 10-K fetch, (2) peer identification, (3) parallel peer fetches for MSFT/GOOGL/META, (4) synthesis. Will run peer fetches concurrently after Apple data lands.",
+    "timestamp": 1200
+  },
+  {
+    "type": "task_spawned",
+    "task_id": "t_001",
+    "label": "Fetch Apple 10-K filings (2019–2023)",
+    "agent": "filing_fetcher",
+    "spawned_by": "coordinator",
+    "parallel_group": null,
+    "depends_on": [],
+    "timestamp": 2000
+  },
+  {
+    "type": "tool_call",
+    "task_id": "t_001",
+    "tool": "sec_edgar_search",
+    "input_summary": "ticker=AAPL, form=10-K, years=2019–2023",
+    "timestamp": 2800
+  },
+  {
+    "type": "tool_result",
+    "task_id": "t_001",
+    "tool": "sec_edgar_search",
+    "output_summary": "5 filings found. Extracting R&D line items from each filing...",
+    "timestamp": 4500
+  },
+  {
+    "type": "tool_call",
+    "task_id": "t_001",
+    "tool": "extract_financials",
+    "input_summary": "fields=[research_development], filings=[AAPL-2019, AAPL-2020, AAPL-2021, AAPL-2022, AAPL-2023]",
+    "timestamp": 5000
+  },
+  {
+    "type": "partial_output",
+    "task_id": "t_001",
+    "content": "Apple R&D spend trajectory: 2019 $16.2B → 2020 $18.8B → 2021 $21.9B → 2022 $26.3B → 2023 $29.9B (+84% cumulative). R&D as % of revenue: 6.3% → 6.8% → 6.7% → 7.2% → 8.0%.",
+    "is_final": false,
+    "quality_score": null,
+    "timestamp": 6500
+  },
+  {
+    "type": "tool_result",
+    "task_id": "t_001",
+    "tool": "extract_financials",
+    "output_summary": "R&D intensity computed across all 5 years. Confidence: high.",
+    "timestamp": 7200
+  },
+  {
+    "type": "partial_output",
+    "task_id": "t_001",
+    "content": "Apple R&D spend: 2019 $16.2B → 2023 $29.9B (+84%). R&D intensity: 6.3% → 8.0% of revenue. Strong upward trend driven by silicon (M-series) and services infrastructure investment.",
+    "is_final": true,
+    "quality_score": 0.93,
+    "timestamp": 8000
+  },
+  {
+    "type": "task_update",
+    "task_id": "t_001",
+    "status": "complete",
+    "error": null,
+    "reason": null,
+    "message": null,
+    "timestamp": 8200
+  },
+  {
+    "type": "agent_thought",
+    "task_id": "coordinator",
+    "thought": "Apple data complete. Spawning parallel peer fetches for Microsoft, Alphabet, and Meta. Will cancel whichever finishes last if 3 of 4 peers provide sufficient data.",
+    "timestamp": 8600
+  },
+  {
+    "type": "task_spawned",
+    "task_id": "t_002",
+    "label": "Fetch Microsoft 10-K filings (2019–2023)",
+    "agent": "filing_fetcher",
+    "spawned_by": "coordinator",
+    "parallel_group": "peer_fetch",
+    "depends_on": ["t_001"],
+    "timestamp": 9200
+  },
+  {
+    "type": "task_spawned",
+    "task_id": "t_003",
+    "label": "Fetch Alphabet 10-K filings (2019–2023)",
+    "agent": "filing_fetcher",
+    "spawned_by": "coordinator",
+    "parallel_group": "peer_fetch",
+    "depends_on": ["t_001"],
+    "timestamp": 9200
+  },
+  {
+    "type": "task_spawned",
+    "task_id": "t_004",
+    "label": "Fetch Meta 10-K filings (2019–2023)",
+    "agent": "filing_fetcher",
+    "spawned_by": "coordinator",
+    "parallel_group": "peer_fetch",
+    "depends_on": ["t_001"],
+    "timestamp": 9200
+  },
+  {
+    "type": "tool_call",
+    "task_id": "t_002",
+    "tool": "sec_edgar_search",
+    "input_summary": "ticker=MSFT, form=10-K, years=2019–2023",
+    "timestamp": 9800
+  },
+  {
+    "type": "tool_call",
+    "task_id": "t_003",
+    "tool": "sec_edgar_search",
+    "input_summary": "ticker=GOOGL, form=10-K, years=2019–2023",
+    "timestamp": 10000
+  },
+  {
+    "type": "tool_call",
+    "task_id": "t_004",
+    "tool": "sec_edgar_search",
+    "input_summary": "ticker=META, form=10-K, years=2019–2023",
+    "timestamp": 10200
+  },
+  {
+    "type": "tool_result",
+    "task_id": "t_002",
+    "tool": "sec_edgar_search",
+    "output_summary": "5 MSFT filings found. Extracting R&D line items...",
+    "timestamp": 11500
+  },
+  {
+    "type": "tool_result",
+    "task_id": "t_003",
+    "tool": "sec_edgar_search",
+    "output_summary": "5 GOOGL filings found. Extracting R&D line items...",
+    "timestamp": 11800
+  },
+  {
+    "type": "partial_output",
+    "task_id": "t_002",
+    "content": "Microsoft R&D: 2019 $16.9B (13.1%) → 2023 $27.2B (12.9%). Intensity stable, absolute spend growing with revenue.",
+    "is_final": false,
+    "quality_score": null,
+    "timestamp": 12500
+  },
+  {
+    "type": "partial_output",
+    "task_id": "t_003",
+    "content": "Alphabet R&D: 2019 $26.0B (15.1%) → 2023 $45.4B (14.9%). High intensity, large absolute base driven by Search AI and cloud infrastructure.",
+    "is_final": false,
+    "quality_score": null,
+    "timestamp": 12800
+  },
+  {
+    "type": "task_update",
+    "task_id": "t_004",
+    "status": "failed",
+    "error": "SEC EDGAR rate limit hit. Backing off 12s before retry.",
+    "reason": null,
+    "message": null,
+    "timestamp": 13200
+  },
+  {
+    "type": "partial_output",
+    "task_id": "t_002",
+    "content": "Microsoft R&D intensity: 2019 13.1% → 2020 13.3% → 2021 12.3% → 2022 12.0% → 2023 12.9%. Relatively stable with a dip mid-cycle. Azure and AI investment accelerating in 2023.",
+    "is_final": true,
+    "quality_score": 0.91,
+    "timestamp": 13800
+  },
+  {
+    "type": "task_update",
+    "task_id": "t_002",
+    "status": "complete",
+    "error": null,
+    "reason": null,
+    "message": null,
+    "timestamp": 14000
+  },
+  {
+    "type": "partial_output",
+    "task_id": "t_003",
+    "content": "Alphabet R&D intensity: 2019 15.1% → 2020 15.1% → 2021 13.7% → 2022 15.0% → 2023 14.9%. Consistent high investment. Other Bets segment inflates total meaningfully.",
+    "is_final": true,
+    "quality_score": 0.89,
+    "timestamp": 14500
+  },
+  {
+    "type": "task_update",
+    "task_id": "t_003",
+    "status": "complete",
+    "error": null,
+    "reason": null,
+    "message": null,
+    "timestamp": 14700
+  },
+  {
+    "type": "task_update",
+    "task_id": "t_004",
+    "status": "running",
+    "error": null,
+    "reason": null,
+    "message": "Retrying after backoff...",
+    "timestamp": 15400
+  },
+  {
+    "type": "tool_call",
+    "task_id": "t_004",
+    "tool": "sec_edgar_search",
+    "input_summary": "ticker=META, form=10-K, years=2019–2023 (retry attempt 2)",
+    "timestamp": 15800
+  },
+  {
+    "type": "task_update",
+    "task_id": "t_004",
+    "status": "cancelled",
+    "error": null,
+    "reason": "sufficient_data",
+    "message": "3 of 4 peers successfully fetched. Coordinator proceeding with available data — Meta data not required for a statistically meaningful comparison.",
+    "timestamp": 16800
+  },
+  {
+    "type": "task_spawned",
+    "task_id": "t_005",
+    "label": "Synthesise R&D intensity comparison report",
+    "agent": "synthesis_agent",
+    "spawned_by": "coordinator",
+    "parallel_group": null,
+    "depends_on": ["t_001", "t_002", "t_003"],
+    "timestamp": 17200
+  },
+  {
+    "type": "agent_thought",
+    "task_id": "t_005",
+    "thought": "I have Apple (6.3%→8.0%), Microsoft (13.1%→12.9%), and Alphabet (15.1%→14.9%). Apple is the lowest in intensity but growing fastest. I'll frame this around the insight that Apple's absolute R&D trajectory is steeper than intensity suggests, due to revenue scale.",
+    "timestamp": 17800
+  },
+  {
+    "type": "partial_output",
+    "task_id": "t_005",
+    "content": "**Apple R&D Intensity vs. Large-Cap Peers (2019–2023)**\n\nApple's R&D intensity has grown from 6.3% to 8.0% of revenue — the steepest rate of increase among peers. In absolute terms, R&D spend rose $13.7B (+84%), outpacing revenue growth of 57%.",
+    "is_final": false,
+    "quality_score": null,
+    "timestamp": 18500
+  },
+  {
+    "type": "partial_output",
+    "task_id": "t_005",
+    "content": "**Apple R&D Intensity vs. Large-Cap Peers (2019–2023)**\n\nApple's R&D intensity has grown from 6.3% to 8.0% of revenue — the steepest rate of increase among peers. In absolute terms, R&D spend rose $13.7B (+84%), outpacing revenue growth of 57%.\n\nMicrosoft held steady at ~13% intensity throughout the period, with 2023 showing renewed investment in AI infrastructure (Azure OpenAI). Alphabet maintained the highest intensity at ~15%, reflecting sustained investment in Search AI, Cloud, and Other Bets.\n\n**Key insight:** Apple's lower headline intensity (8% vs. 13–15% for peers) understates its competitive position — Apple's R&D is highly concentrated in silicon (M-series, Neural Engine) and a narrower product surface area, suggesting higher output-per-dollar efficiency. The intensity gap is structural, not a sign of underinvestment.",
+    "is_final": true,
+    "quality_score": 0.95,
+    "timestamp": 20200
+  },
+  {
+    "type": "task_update",
+    "task_id": "t_005",
+    "status": "complete",
+    "error": null,
+    "reason": null,
+    "message": null,
+    "timestamp": 20500
+  },
+  {
+    "type": "run_complete",
+    "run_id": "r_001",
+    "status": "complete",
+    "duration_ms": 21400,
+    "task_count": 5,
+    "output": {
+      "summary": "Apple's R&D intensity has grown from 6.3% to 8.0% of revenue (2019–2023), the steepest increase among peers. Absolute spend rose $13.7B (+84%). Microsoft held at ~13% intensity; Alphabet at ~15%. Apple's lower intensity reflects structural differences in product scope and silicon concentration — not underinvestment. The intensity gap vs. peers is closing.",
+      "citations": [
+        { "ref_id": "c1", "title": "Apple 10-K 2023", "source": "SEC EDGAR", "page": 48 },
+        { "ref_id": "c2", "title": "Apple 10-K 2019", "source": "SEC EDGAR", "page": 44 },
+        { "ref_id": "c3", "title": "Microsoft 10-K 2023", "source": "SEC EDGAR", "page": 51 },
+        { "ref_id": "c4", "title": "Alphabet 10-K 2023", "source": "SEC EDGAR", "page": 59 }
+      ]
+    },
+    "timestamp": 21400
+  }
+]
