@@ -3,6 +3,21 @@
 A real-time UI for watching an orchestrated multi-agent research pipeline unfold.  
 Built with React 18 + Vite + Tailwind CSS. No backend, no component libraries.
 
+🔗 **Live demo:** [jcurveiq-agent-run-panel-rust.vercel.app](https://jcurveiq-agent-run-panel-rust.vercel.app)
+
+---
+
+## Screenshots
+
+### Idle state
+![Idle state](screenshots/idle.png)
+
+### Success run — parallel tasks in progress
+![Success run](screenshots/success_run.png)
+
+### Error run
+![Error run](screenshots/error_run.png)
+
 ---
 
 ## Running locally
